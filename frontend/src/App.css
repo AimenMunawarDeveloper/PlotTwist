@@ -1,3 +1,16 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@font-face {
+  font-family: "Tan-Astoria";
+  src: url("../src/fonts/TAN-Astoria/TAN-ASTORIA-Display.otf")
+      format("opentype"),
+    url("../src/fonts/TAN-Astoria/TAN-ASTORIA-Display.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+html,
+body {
+  font-family: "Open Sans", sans-serif;
+}
