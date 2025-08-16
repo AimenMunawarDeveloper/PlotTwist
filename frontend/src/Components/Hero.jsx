@@ -4,7 +4,9 @@ export default function Hero() {
   return (
     <div className="flex justify-between flex-wrap">
       <div className="w-1/2 flex flex-col justify-center gap-10">
-        <h4 className="text-xl">Endless Stories, One Choice at a Time</h4>
+        <h4 className="bg-black text-white p-2 rounded-md text-lg uppercase w-fit">
+          Endless Stories, One Choice at a Time
+        </h4>
         <h1 className="text-5xl font-bold">
           Create,{" "}
           <span className="relative inline-block">
