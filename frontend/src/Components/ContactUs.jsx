@@ -75,7 +75,10 @@ export default function ContactUs() {
                 ></textarea>
               </div>
             </div>
-            <button className="bg-black text-white px-4 py-2 rounded-md mt-8">
+            <button
+              className="bg-black text-white px-4 py-2 rounded-md mt-8"
+              type="submit"
+            >
               Send Message
             </button>
           </form>

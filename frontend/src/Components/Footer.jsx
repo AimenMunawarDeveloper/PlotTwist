@@ -26,7 +26,7 @@ export default function Footer() {
         <div className="flex flex-col gap-4 items-center">
           <h2 className="text-xl font-semibold">Quick Links</h2>
           <Link
-            to="/"
+            to="/home"
             className={`hover:font-semibold ${
               currentPath === "/" ? "border-b-2 border-black" : ""
             }`}

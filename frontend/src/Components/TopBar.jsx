@@ -17,7 +17,7 @@ export default function TopBar() {
       </div>
       <div className="flex justify-between items-center w-3/4 text-black">
         <Link
-          to="/"
+          to="/home"
           className={`hover:font-semibold ${
             currentPath === "/" ? "border-b-2 border-black" : ""
           }`}
@@ -51,7 +51,7 @@ export default function TopBar() {
         <Link
           to="/"
           className={`hover:font-semibold ${
-            currentPath === "/login" ? "border-b-2 border-black" : ""
+            currentPath === "/" ? "border-b-2 border-black" : ""
           }`}
         >
           Login
