@@ -7,11 +7,11 @@ import {
   FaTwitter,
   FaDiscord,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 export default function Footer() {
-  const [selected, setSelected] = useState("Home");
+  const location = useLocation();
+  const currentPath = location.pathname;
   return (
     <div className="flex flex-col w-full shadow-black shadow-2xl bg-white ">
       <div className="w-full py-20 px-40 grid grid-cols-3 items-start">
@@ -28,36 +28,32 @@ export default function Footer() {
           <Link
             to="/"
             className={`hover:font-semibold ${
-              selected === "Home" ? "border-b-2 border-black" : ""
+              currentPath === "/" ? "border-b-2 border-black" : ""
             }`}
-            onClick={() => setSelected("Home")}
           >
             Home
           </Link>
           <Link
-            to="/"
+            to="/stories"
             className={`hover:font-semibold ${
-              selected === "Stories" ? "border-b-2 border-black" : ""
+              currentPath === "/stories" ? "border-b-2 border-black" : ""
             }`}
-            onClick={() => setSelected("Stories")}
           >
             Stories
           </Link>
           <Link
             to="/"
             className={`hover:font-semibold ${
-              selected === "My Stories" ? "border-b-2 border-black" : ""
+              currentPath === "/my-stories" ? "border-b-2 border-black" : ""
             }`}
-            onClick={() => setSelected("My Stories")}
           >
             My Stories
           </Link>
           <Link
             to="/"
             className={`hover:font-semibold ${
-              selected === "Leaderboard" ? "border-b-2 border-black" : ""
+              currentPath === "leaderboard" ? "border-b-2 border-black" : ""
             }`}
-            onClick={() => setSelected("Leaderboard")}
           >
             Leaderboard
           </Link>

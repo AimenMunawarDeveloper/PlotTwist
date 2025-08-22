@@ -1,10 +1,10 @@
 import logoV3Transparent from "../assets/logoV4.png";
 import logoV7 from "../assets/logoV7.png";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 export default function TopBar() {
-  const [selected, setSelected] = useState("Home");
+  const location = useLocation();
+  const currentPath = location.pathname;
   return (
     <div className="w-full flex justify-between z-10 flex-wrap relative">
       <div className="flex justify-center items-center gap-4">
@@ -19,45 +19,40 @@ export default function TopBar() {
         <Link
           to="/"
           className={`hover:font-semibold ${
-            selected === "Home" ? "border-b-2 border-black" : ""
+            currentPath === "/" ? "border-b-2 border-black" : ""
           }`}
-          onClick={() => setSelected("Home")}
         >
           Home
         </Link>
         <Link
-          to="/"
+          to="/stories"
           className={`hover:font-semibold ${
-            selected === "Stories" ? "border-b-2 border-black" : ""
+            currentPath === "/stories" ? "border-b-2 border-black" : ""
           }`}
-          onClick={() => setSelected("Stories")}
         >
           Stories
         </Link>
         <Link
           to="/"
           className={`hover:font-semibold ${
-            selected === "My Stories" ? "border-b-2 border-black" : ""
+            currentPath === "/my-stories" ? "border-b-2 border-black" : ""
           }`}
-          onClick={() => setSelected("My Stories")}
         >
           My Stories
         </Link>
         <Link
           to="/"
           className={`hover:font-semibold ${
-            selected === "Leaderboard" ? "border-b-2 border-black" : ""
+            currentPath === "/leaderboard" ? "border-b-2 border-black" : ""
           }`}
-          onClick={() => setSelected("Leaderboard")}
         >
           Leaderboard
         </Link>
         <Link
           to="/"
           className={`hover:font-semibold ${
-            selected === "Login" ? "border-b-2 border-black" : ""
+            currentPath === "/login" ? "border-b-2 border-black" : ""
           }`}
-          onClick={() => setSelected("Login")}
         >
           Login
         </Link>
