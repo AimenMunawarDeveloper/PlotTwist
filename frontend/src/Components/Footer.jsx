@@ -42,7 +42,7 @@ export default function Footer() {
             Stories
           </Link>
           <Link
-            to="/"
+            to="/my-stories"
             className={`hover:font-semibold ${
               currentPath === "/my-stories" ? "border-b-2 border-black" : ""
             }`}

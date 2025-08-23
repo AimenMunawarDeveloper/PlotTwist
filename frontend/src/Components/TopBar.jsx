@@ -33,7 +33,7 @@ export default function TopBar() {
           Stories
         </Link>
         <Link
-          to="/"
+          to="/my-stories"
           className={`hover:font-semibold ${
             currentPath === "/my-stories" ? "border-b-2 border-black" : ""
           }`}
@@ -47,6 +47,14 @@ export default function TopBar() {
           }`}
         >
           Leaderboard
+        </Link>
+        <Link
+          to="/profile"
+          className={`hover:font-semibold ${
+            currentPath === "/profile" ? "border-b-2 border-black" : ""
+          }`}
+        >
+          Profile
         </Link>
         <Link
           to="/"

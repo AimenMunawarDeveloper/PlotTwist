@@ -1,5 +1,5 @@
 import { useState } from "react";
-import LightRays from "../Components/LightRays";
+import LightRays from "../animation/LightRays";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function LoginAndSignup() {
