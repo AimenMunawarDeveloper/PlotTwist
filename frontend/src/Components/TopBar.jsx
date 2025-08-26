@@ -19,7 +19,7 @@ export default function TopBar() {
         <Link
           to="/home"
           className={`hover:font-semibold ${
-            currentPath === "/" ? "border-b-2 border-black" : ""
+            currentPath === "/home" ? "border-b-2 border-black" : ""
           }`}
         >
           Home
@@ -41,7 +41,7 @@ export default function TopBar() {
           My Stories
         </Link>
         <Link
-          to="/"
+          to="/leaderboard"
           className={`hover:font-semibold ${
             currentPath === "/leaderboard" ? "border-b-2 border-black" : ""
           }`}

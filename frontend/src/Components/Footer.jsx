@@ -28,7 +28,7 @@ export default function Footer() {
           <Link
             to="/home"
             className={`hover:font-semibold ${
-              currentPath === "/" ? "border-b-2 border-black" : ""
+              currentPath === "/home" ? "border-b-2 border-black" : ""
             }`}
           >
             Home
@@ -50,9 +50,9 @@ export default function Footer() {
             My Stories
           </Link>
           <Link
-            to="/"
+            to="/leaderboard"
             className={`hover:font-semibold ${
-              currentPath === "leaderboard" ? "border-b-2 border-black" : ""
+              currentPath === "/leaderboard" ? "border-b-2 border-black" : ""
             }`}
           >
             Leaderboard
