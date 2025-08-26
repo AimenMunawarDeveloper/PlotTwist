@@ -87,7 +87,7 @@ PlotTwist is a revolutionary interactive storytelling platform where users colla
 - `npm run lint` - Run ESLint
 - `npm run preview` - Preview production build
 
-## 🏗Technology Stack
+## Technology Stack
 
 ### Frontend
 
@@ -98,7 +98,7 @@ PlotTwist is a revolutionary interactive storytelling platform where users colla
 - **React Toastify** - Toast notifications
 - **Vite** - Fast build tool and dev server
 
-## 🎮 How It Works
+## How It Works
 
 ### 1. **Read the Latest Chapter**
 
@@ -112,7 +112,7 @@ Choose what happens next — every vote helps decide the direction of the plot.
 
 Your decisions influence characters, twists, and endings in real time.
 
-## 🎯 Core Features Explained
+## Core Features Explained
 
 ### **Interactive Storytelling**
 
@@ -142,7 +142,7 @@ Your decisions influence characters, twists, and endings in real time.
 - Comment threads on chapters
 - Social features for story sharing
 
-## 🎨 Design Philosophy
+## Design Philosophy
 
 PlotTwist follows a **mobile-first, responsive design** approach with:
 
@@ -151,7 +151,7 @@ PlotTwist follows a **mobile-first, responsive design** approach with:
 - **Smooth animations** for enhanced UX
 - **Accessible design** for all users
 
-## 🔮 Future Roadmap
+## Future Roadmap
 
 - [ ] Real-time collaboration features
 - [ ] Advanced story analytics
