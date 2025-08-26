@@ -1,31 +1,13 @@
 import { useState } from "react";
-import first from "../assets/ContinueReading/1.jpg";
-import second from "../assets/ContinueReading/2.jpg";
-import third from "../assets/ContinueReading/3.jpg";
-import fourth from "../assets/ContinueReading/4.jpg";
-import fifth from "../assets/ContinueReading/5.jpg";
-import sixth from "../assets/TopPicksForYou/1.jpg";
-import seventh from "../assets/TopPicksForYou/2.jpg";
-import eighth from "../assets/TopPicksForYou/3.jpg";
-import ninth from "../assets/TopPicksForYou/4.jpg";
-import tenth from "../assets/TopPicksForYou/5.jpg";
+import { Link } from "react-router-dom";
+import { getContinueReadingStories } from "../data/mockData";
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 
-const ContinueReadingList = [
-  { name: "Summer Nights", image: first, genre: "Slice of Life" },
-  { name: "The Lantern Keeper", image: second, genre: "Supernatural" },
-  { name: "Beyond the Court", image: third, genre: "Sports" },
-  { name: "Empire’s Fall", image: fourth, genre: "Historical" },
-  { name: "The Forgotten Asylum", image: fifth, genre: "Horror" },
-  { name: "The House on Black Hill", image: sixth, genre: "Horror" },
-  { name: "The Misadventures of Milo", image: seventh, genre: "Comedy" },
-  { name: "Beneath the Broken Sky", image: eighth, genre: "Drama" },
-  { name: "The Little Cloud Who Could", image: ninth, genre: "Children" },
-  { name: "Sailing Beyond the Horizon", image: tenth, genre: "Adventure" },
-];
 export default function ContinueReading() {
+  const ContinueReadingList = getContinueReadingStories();
   const [start, setStart] = useState(0);
   const [end, setEnd] = useState(5);
+
   const handleNext = () => {
     if (end < ContinueReadingList.length) {
       setStart((previous) => previous + 5);
@@ -40,36 +22,43 @@ export default function ContinueReading() {
   };
   return (
     <div className="w-full">
-      <div className="flex justify-between items-center">
-        <h1 className="text-4xl font-bold">Continue Reading</h1>
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center sm:text-left">
+          Continue Reading
+        </h1>
         <div className="flex gap-2">
           <FaArrowLeft
-            className="w-8 h-8 cursor-pointer hover:text-gray-400 transition-colors duration-100"
+            className="w-6 h-6 sm:w-8 sm:h-8 cursor-pointer hover:text-gray-400 transition-colors duration-100"
             onClick={handlePrevious}
           />
           <FaArrowRight
-            className="w-8 h-8 cursor-pointer transition-colors duration-100 hover:text-gray-400 "
+            className="w-6 h-6 sm:w-8 sm:h-8 cursor-pointer transition-colors duration-100 hover:text-gray-400 "
             onClick={handleNext}
           />
         </div>
       </div>
-      <div className="grid grid-cols-5 gap-10 pt-14">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-10 pt-8 lg:pt-14">
         {ContinueReadingList.length > 0
           ? ContinueReadingList.slice(start, end).map((card, index) => {
               return (
-                <div
-                  className="flex flex-col rounded-lg cursor-pointer border-2 border-gray-300 hover:shadow-black hover:shadow-md overflow-hidden"
+                <Link
+                  to={`/story/${card.id}`}
+                  className="flex flex-col rounded-lg cursor-pointer border-2 border-gray-300 hover:shadow-black hover:shadow-md overflow-hidden transition-all duration-300 hover:scale-105"
                   key={index}
                 >
                   <img
                     className="object-cover w-full aspect-[3/2]"
-                    src={card.image}
+                    src={card.coverImage}
                   />
                   <div className="py-1">
-                    <p className="px-2 font-medium break-words">{card.name}</p>
-                    <p className="px-2 text-gray-400 text-sm">{card.genre}</p>
+                    <p className="px-2 font-medium break-words text-sm sm:text-base">
+                      {card.title}
+                    </p>
+                    <p className="px-2 text-gray-400 text-xs sm:text-sm">
+                      {card.category}
+                    </p>
                   </div>
-                </div>
+                </Link>
               );
             })
           : ""}

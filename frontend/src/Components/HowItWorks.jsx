@@ -29,23 +29,27 @@ const cards = [
 export default function HowItWorks() {
   return (
     <div className="w-full">
-      <h1 className="text-4xl font-bold text-center">How It Works</h1>
-      <div className="w-full flex justify-between flex-wrap gap-10 items-center px-6 pt-14">
+      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-8 lg:mb-0">
+        How It Works
+      </h1>
+      <div className="w-full flex flex-col lg:flex-row justify-between gap-6 lg:gap-10 items-center px-4 lg:px-6 pt-8 lg:pt-14">
         {cards.length > 0
           ? cards.map((card, index) => {
               return (
                 <div
-                  className="flex flex-col flex-wrap justify-center items-center gap-4 relative w-1/4 text-justify border-1 border-[#B6B2B2] p-4 rounded-md shadow-md shadow-slate-500"
+                  className="flex flex-col justify-center items-center gap-3 lg:gap-4 relative w-full lg:w-1/4 text-center lg:text-justify border-1 border-[#B6B2B2] p-4 lg:p-4 rounded-md shadow-md shadow-slate-500"
                   key={index}
                 >
-                  <card.icon className="w-8 h-8" />
-                  <h3 className="text-xl font-semibold">Step {card.step}</h3>
-                  <h4 className="text-lg">{card.heading}</h4>
-                  <h5 className="text-md">{card.subHeading}</h5>
+                  <card.icon className="w-6 h-6 lg:w-8 lg:h-8" />
+                  <h3 className="text-lg lg:text-xl font-semibold">
+                    Step {card.step}
+                  </h3>
+                  <h4 className="text-base lg:text-lg">{card.heading}</h4>
+                  <h5 className="text-sm lg:text-md">{card.subHeading}</h5>
                   {card.step === 3 ? (
                     <img
                       src={CardDecoration}
-                      className="absolute top-0 right-[-60px] h-full"
+                      className="absolute top-0 right-[-60px] h-full hidden lg:block"
                     />
                   ) : (
                     ""

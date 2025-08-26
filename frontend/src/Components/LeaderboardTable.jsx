@@ -1,245 +1,98 @@
 import { FaShieldAlt, FaSkull, FaGem, FaCrown } from "react-icons/fa";
+import { leaderboardData } from "../data/mockData";
 
 export default function LeaderboardTable() {
-  const players = [
-    {
-      id: 1,
-      place: 4,
-      name: "Rens",
-      avatar: "/api/placeholder/40/40",
-      wins: 42,
-      losses: 21,
-      winrate: 64,
-      kda: 1.23,
-      rank: "Challenger",
-      rankIcon: "challenger",
-      rankColor: "text-white",
-    },
-    {
-      id: 2,
-      place: 5,
-      name: "Edwin",
-      avatar: "/api/placeholder/40/40",
-      wins: 42,
-      losses: 21,
-      winrate: 64,
-      kda: 1.23,
-      rank: "Challenger",
-      rankIcon: "challenger",
-      rankColor: "text-white",
-    },
-    {
-      id: 3,
-      place: 6,
-      name: "FlyWithMe",
-      avatar: "/api/placeholder/40/40",
-      wins: 20,
-      losses: 21,
-      winrate: 49,
-      kda: 5.23,
-      rank: "Challenger",
-      rankIcon: "challenger",
-      rankColor: "text-white",
-    },
-    {
-      id: 4,
-      place: 8,
-      name: "BigBob007",
-      avatar: "/api/placeholder/40/40",
-      wins: 20,
-      losses: 21,
-      winrate: 49,
-      kda: 5.23,
-      rank: "Grandmaster",
-      rankIcon: "grandmaster",
-      rankColor: "text-white",
-    },
-    {
-      id: 5,
-      place: 10,
-      name: "Pudge",
-      avatar: "/api/placeholder/40/40",
-      wins: 20,
-      losses: 21,
-      winrate: 49,
-      kda: 5.23,
-      rank: "Master",
-      rankIcon: "master",
-      rankColor: "text-white",
-    },
-    {
-      id: 6,
-      place: 12,
-      name: "n0nameplayer",
-      avatar: "/api/placeholder/40/40",
-      wins: 12,
-      losses: 21,
-      winrate: 34,
-      kda: 1.23,
-      rank: "Master",
-      rankIcon: "master",
-      rankColor: "text-white",
-    },
-    {
-      id: 7,
-      place: 13,
-      name: "Kimberly Mastrangelo",
-      avatar: "/api/placeholder/40/40",
-      wins: 12,
-      losses: 21,
-      winrate: 34,
-      kda: 1.23,
-      rank: "Gold",
-      rankIcon: "gold",
-      rankColor: "text-white",
-    },
-  ];
+  const players = leaderboardData;
 
   const getRankIcon = (rankIcon) => {
     switch (rankIcon) {
       case "challenger":
-        return <FaShieldAlt className="text-white" />;
+        return <FaCrown className="w-6 h-6 text-yellow-400" />;
       case "grandmaster":
-        return <FaSkull className="text-white" />;
+        return <FaGem className="w-6 h-6 text-purple-400" />;
       case "master":
-        return <FaGem className="text-white" />;
+        return <FaShieldAlt className="w-6 h-6 text-blue-400" />;
       case "gold":
-        return <FaCrown className="text-white" />;
+        return <FaSkull className="w-6 h-6 text-yellow-600" />;
       default:
-        return <FaShieldAlt className="text-white" />;
+        return <FaShieldAlt className="w-6 h-6 text-gray-400" />;
     }
   };
-
-  const getProgressBarColor = (type) => {
-    if (type === "local") {
-      return "bg-orange-500";
-    } else if (type === "winrate") {
-      return "bg-green-500";
-    } else if (type === "kda") {
-      return "bg-blue-500";
-    }
-    return "bg-gray-500";
-  };
-
-  const getProgressBarWidth = (type, value) => {
-    if (type === "local") {
-      const total = value.wins + value.losses;
-      return (value.wins / total) * 100;
-    } else if (type === "winrate") {
-      return value;
-    } else if (type === "kda") {
-      return Math.min((value / 10) * 100, 100);
-    }
-    return 0;
-  };
-
   return (
-    <div className="w-full max-w-6xl mx-auto">
-      <div className="bg-gray-900 rounded-lg overflow-hidden shadow-xl">
-        <table className="w-full">
-          <thead>
-            <tr className="bg-gray-800 border-b border-gray-700">
-              <th className="text-left py-4 px-6 text-white font-semibold">
-                Place
+    <div className="w-full">
+      {/* Desktop Table View */}
+      <div className="hidden lg:block overflow-x-auto">
+        <table className="w-full bg-white shadow-lg rounded-lg overflow-hidden">
+          <thead className="bg-gray-800 text-white">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                Rank
               </th>
-              <th className="text-left py-4 px-6 text-white font-semibold">
-                Player name
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                Player
               </th>
-              <th className="text-center py-4 px-6 text-white font-semibold">
-                Local stats
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                Wins
               </th>
-              <th className="text-center py-4 px-6 text-white font-semibold">
-                Winrate
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                Losses
               </th>
-              <th className="text-center py-4 px-6 text-white font-semibold">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                Win Rate
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                 KDA
               </th>
-              <th className="text-left py-4 px-6 text-white font-semibold">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                 Rank
               </th>
             </tr>
           </thead>
-          <tbody>
-            {players.map((player, index) => (
-              <tr
-                key={player.id}
-                className={`border-b border-gray-700 hover:bg-gray-800 transition-colors ${
-                  index % 2 === 0 ? "bg-gray-900" : "bg-gray-850"
-                }`}
-              >
-                <td className="py-4 px-6 text-white font-medium">
-                  {player.place}
+          <tbody className="bg-white divide-y divide-gray-200">
+            {players.map((player) => (
+              <tr key={player.id} className="hover:bg-gray-50">
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  #{player.place}
                 </td>
-                <td className="py-4 px-6">
-                  <div className="flex items-center space-x-3">
-                    <img
-                      src={player.avatar}
-                      alt={player.name}
-                      className="w-10 h-10 rounded-full object-cover"
-                      onError={(e) => {
-                        e.target.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${player.name}`;
-                      }}
-                    />
-                    <span className="text-white font-medium">
-                      {player.name}
-                    </span>
-                  </div>
-                </td>
-                <td className="py-4 px-6 text-center">
-                  <div className="flex flex-col items-center">
-                    <span className="text-white font-medium mb-1">
-                      {player.wins} - {player.losses}
-                    </span>
-                    <div className="w-16 h-1 bg-gray-600 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full ${getProgressBarColor("lokal")}`}
-                        style={{
-                          width: `${getProgressBarWidth("lokal", {
-                            wins: player.wins,
-                            losses: player.losses,
-                          })}%`,
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0 h-10 w-10">
+                      <img
+                        className="h-10 w-10 rounded-full object-cover"
+                        src={player.avatar}
+                        alt={player.name}
+                        onError={(e) => {
+                          e.target.style.display = "none";
+                          e.target.nextSibling.style.display = "flex";
                         }}
-                      ></div>
+                      />
+                      <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 font-semibold text-sm hidden">
+                        {player.name.charAt(0).toUpperCase()}
+                      </div>
+                    </div>
+                    <div className="ml-4">
+                      <div className="text-sm font-medium text-gray-900">
+                        {player.name}
+                      </div>
                     </div>
                   </div>
                 </td>
-                <td className="py-4 px-6 text-center">
-                  <div className="flex flex-col items-center">
-                    <span className="text-white font-medium mb-1">
-                      {player.winrate}%
-                    </span>
-                    <div className="w-16 h-1 bg-gray-600 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full ${getProgressBarColor("winrate")}`}
-                        style={{
-                          width: `${getProgressBarWidth(
-                            "winrate",
-                            player.winrate
-                          )}%`,
-                        }}
-                      ></div>
-                    </div>
-                  </div>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {player.wins}
                 </td>
-                <td className="py-4 px-6 text-center">
-                  <div className="flex flex-col items-center">
-                    <span className="text-white font-medium mb-1">
-                      {player.kda}
-                    </span>
-                    <div className="w-16 h-1 bg-gray-600 rounded-full overflow-hidden">
-                      <div
-                        className={`h-full ${getProgressBarColor("kda")}`}
-                        style={{
-                          width: `${getProgressBarWidth("kda", player.kda)}%`,
-                        }}
-                      ></div>
-                    </div>
-                  </div>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {player.losses}
                 </td>
-                <td className="py-4 px-6">
-                  <div className="flex items-center space-x-2">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {player.winrate}%
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {player.kda}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex items-center">
                     {getRankIcon(player.rankIcon)}
-                    <span className={`font-medium ${player.rankColor}`}>
+                    <span className="ml-2 text-sm font-medium text-gray-900">
                       {player.rank}
                     </span>
                   </div>
@@ -248,6 +101,75 @@ export default function LeaderboardTable() {
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile/Tablet Card View */}
+      <div className="lg:hidden space-y-4">
+        {players.map((player) => (
+          <div
+            key={player.id}
+            className="bg-white rounded-lg shadow-md p-3 sm:p-4 hover:shadow-lg transition-shadow"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center space-x-2 sm:space-x-3">
+                <div className="text-base sm:text-lg font-bold text-gray-900">
+                  #{player.place}
+                </div>
+                <div className="relative">
+                  <img
+                    className="h-10 w-10 sm:h-12 sm:w-12 rounded-full object-cover"
+                    src={player.avatar}
+                    alt={player.name}
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                      e.target.nextSibling.style.display = "flex";
+                    }}
+                  />
+                  <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 font-semibold text-sm sm:text-base hidden">
+                    {player.name.charAt(0).toUpperCase()}
+                  </div>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="text-xs sm:text-sm font-medium text-gray-900 truncate">
+                    {player.name}
+                  </div>
+                  <div className="flex items-center mt-1">
+                    {getRankIcon(player.rankIcon)}
+                    <span className="ml-1 sm:ml-2 text-xs text-gray-600 truncate">
+                      {player.rank}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-2 sm:gap-4 text-center">
+              <div>
+                <div className="text-xs text-gray-500">Wins</div>
+                <div className="text-xs sm:text-sm font-semibold text-gray-900">
+                  {player.wins}
+                </div>
+              </div>
+              <div>
+                <div className="text-xs text-gray-500">Losses</div>
+                <div className="text-xs sm:text-sm font-semibold text-gray-900">
+                  {player.losses}
+                </div>
+              </div>
+              <div>
+                <div className="text-xs text-gray-500">Win Rate</div>
+                <div className="text-xs sm:text-sm font-semibold text-gray-900">
+                  {player.winrate}%
+                </div>
+              </div>
+            </div>
+            <div className="mt-2 sm:mt-3 text-center">
+              <div className="text-xs text-gray-500">KDA</div>
+              <div className="text-xs sm:text-sm font-semibold text-gray-900">
+                {player.kda}
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

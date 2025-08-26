@@ -24,8 +24,8 @@ export default function LoginAndSignup() {
           />
         </div>
       </div>
-      <div className="flex flex-col gap-10 p-6 bg-black rounded-lg w-1/3 shadow-lg shadow-black">
-        <h2 className="text-3xl font-bold text-center text-white">
+      <div className="flex flex-col gap-6 sm:gap-10 p-4 sm:p-6 bg-black rounded-lg w-11/12 sm:w-4/5 md:w-2/3 lg:w-1/2 xl:w-1/3 shadow-lg shadow-black">
+        <h2 className="text-2xl sm:text-3xl font-bold text-center text-white">
           {loginOrSignup === "login" ? "Login" : "Signup"}
         </h2>
         <form
@@ -37,27 +37,27 @@ export default function LoginAndSignup() {
         >
           {loginOrSignup === "signup" && (
             <>
-              <label htmlFor="name" className="text-white">
-                Name
-              </label>
-              <input
-                type="text"
-                placeholder="Enter name"
-                name="name"
-                className="p-2 bg-white rounded-md text-black"
-              />
+                        <label htmlFor="name" className="text-white text-sm sm:text-base">
+            Name
+          </label>
+          <input
+            type="text"
+            placeholder="Enter name"
+            name="name"
+            className="p-2 sm:p-3 bg-white rounded-md text-black text-sm sm:text-base"
+          />
             </>
           )}
-          <label htmlFor="email" className="text-white">
+          <label htmlFor="email" className="text-white text-sm sm:text-base">
             Email
           </label>
           <input
             type="email"
             placeholder="Enter email"
             name="email"
-            className="p-2 bg-white rounded-md text-black"
+            className="p-2 sm:p-3 bg-white rounded-md text-black text-sm sm:text-base"
           />
-          <label htmlFor="password" className="text-white">
+          <label htmlFor="password" className="text-white text-sm sm:text-base">
             Password
           </label>
           <div className="relative w-full">
@@ -65,7 +65,7 @@ export default function LoginAndSignup() {
               type={showOrHidePassword ? "text" : "password"}
               placeholder="Enter password"
               name="password"
-              className="p-2 pr-10 bg-white rounded-md text-black w-full"
+              className="p-2 sm:p-3 pr-10 bg-white rounded-md text-black w-full text-sm sm:text-base"
             />
             <span
               onClick={() => setShowOrHidePassword(!showOrHidePassword)}
@@ -75,13 +75,13 @@ export default function LoginAndSignup() {
             </span>
           </div>
           <button
-            className="bg-white text-black px-4 py-2 rounded-md mt-8"
+            className="bg-white text-black px-4 py-2 sm:py-3 rounded-md mt-6 sm:mt-8 text-sm sm:text-base hover:bg-gray-100 transition-colors"
             type="submit"
           >
             {loginOrSignup === "login" ? "Login" : "Signup"}
           </button>
           {loginOrSignup === "login" ? (
-            <p className="text-white">
+            <p className="text-white text-sm sm:text-base text-center">
               Don't have an account?{" "}
               <span
                 onClick={() => setLoginOrSignup("signup")}
@@ -91,7 +91,7 @@ export default function LoginAndSignup() {
               </span>
             </p>
           ) : (
-            <p className="text-white">
+            <p className="text-white text-sm sm:text-base text-center">
               Already have an account?{" "}
               <span
                 onClick={() => setLoginOrSignup("login")}

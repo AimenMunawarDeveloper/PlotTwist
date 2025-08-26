@@ -1,52 +1,26 @@
-import {
-  FaHeart,
-  FaDragon,
-  FaTheaterMasks,
-  FaLaugh,
-  FaShieldAlt,
-  FaRobot,
-  FaEye,
-  FaSearch,
-  FaBasketballBall,
-  FaLandmark,
-  FaHandHoldingHeart,
-  FaChild,
-} from "react-icons/fa";
-
-import { GiCampfire, GiGhost, GiSpookyHouse } from "react-icons/gi";
-
-const categoriesList = [
-  { name: "Romance", icon: FaHeart },
-  { name: "Fantasy", icon: FaDragon },
-  { name: "Drama", icon: FaTheaterMasks },
-  { name: "Comedy", icon: FaLaugh },
-  { name: "Slice of Life", icon: GiCampfire },
-  { name: "Superhero", icon: FaShieldAlt },
-  { name: "Sci-fi", icon: FaRobot },
-  { name: "Thriller", icon: FaEye },
-  { name: "Supernatural", icon: GiGhost },
-  { name: "Mystery", icon: FaSearch },
-  { name: "Sports", icon: FaBasketballBall },
-  { name: "Historical", icon: FaLandmark },
-  { name: "Heart-warming", icon: FaHandHoldingHeart },
-  { name: "Horror", icon: GiSpookyHouse },
-  { name: "Children", icon: FaChild },
-];
+import { Link } from "react-router-dom";
+import { categories } from "../data/mockData";
 
 export default function Categories() {
   return (
     <div className="w-full">
-      <div className="grid grid-cols-5 gap-10">
-        {categoriesList.length > 0
-          ? categoriesList.map((category, index) => {
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-10">
+        {categories.length > 0
+          ? categories.map((category, index) => {
+              const IconComponent = category.icon;
               return (
-                <div
-                  className="bg-[#262626] hover:shadow-black hover:shadow-md flex flex-col p-6 h-28 rounded-lg cursor-pointer items-between"
+                <Link
+                  to={`/category/${category.name}`}
+                  className="bg-[#262626] hover:shadow-black hover:shadow-md flex flex-col justify-between p-3 sm:p-4 lg:p-6 h-20 sm:h-24 lg:h-28 rounded-lg cursor-pointer transition-all duration-300 hover:scale-105"
                   key={index}
                 >
-                  <p className="text-white">{category.name}</p>
-                  <category.icon className="w-12 h-12 text-white self-end" />
-                </div>
+                  <p className="text-white text-xs sm:text-sm lg:text-base truncate">
+                    {category.name}
+                  </p>
+                  <IconComponent
+                    className={`w-6 h-6 sm:w-8 sm:h-8 lg:w-12 lg:h-12 text-white self-end ${category.color}`}
+                  />
+                </Link>
               );
             })
           : ""}

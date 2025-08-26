@@ -65,18 +65,22 @@ export default function Achievements() {
   return (
     <div className="w-full">
       <div className="flex flex-col">
-        <h1 className="text-4xl font-bold text-center">Badges</h1>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-10 mt-14">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center">
+          Badges
+        </h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6 lg:gap-10 mt-8 sm:mt-10 lg:mt-14">
           {badgesList.length > 0
             ? badgesList.map((badge, index) => {
                 return (
                   <div
-                    className="flex flex-col gap-2 border-2 border-black items-center justify-center p-2 rounded-lg text-center"
+                    className="flex flex-col gap-2 border-2 border-black items-center justify-center p-3 sm:p-4 rounded-lg text-center"
                     key={index}
                   >
-                    {<badge.icon />}
-                    <p className="text-lg">{badge.name}</p>
-                    <p className="text-sm">{badge.condition}</p>
+                    {<badge.icon className="w-6 h-6 sm:w-8 sm:h-8" />}
+                    <p className="text-sm sm:text-base lg:text-lg font-semibold">
+                      {badge.name}
+                    </p>
+                    <p className="text-xs sm:text-sm">{badge.condition}</p>
                   </div>
                 );
               })

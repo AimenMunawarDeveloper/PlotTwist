@@ -9,18 +9,18 @@ import Trending from "../Components/Trending";
 
 export default function Home() {
   return (
-    <div className="flex flex-col gap-36">
-      <div className="mx-24 my-12">
+    <div className="flex flex-col gap-8 sm:gap-16 lg:gap-36">
+      <div className="mx-4 sm:mx-8 md:mx-16 lg:mx-24 my-4 sm:my-8 lg:my-12">
         <div>
           <img
             src={Herobg}
-            className="absolute top-0 right-0 z-0 pointer-events-none opacity-30"
+            className="absolute top-0 right-0 z-0 pointer-events-none opacity-20 sm:opacity-30 w-1/2 sm:w-auto"
           />
         </div>
-        <div className="w-full flex flex-col gap-24">
+        <div className="w-full flex flex-col gap-8 sm:gap-16 lg:gap-24">
           <TopBar />
           <Hero />
-          <div className="flex flex-col gap-36 items-center">
+          <div className="flex flex-col gap-8 sm:gap-16 lg:gap-36 items-center">
             <HowItWorks />
             <Trending />
             <ContactUs />
