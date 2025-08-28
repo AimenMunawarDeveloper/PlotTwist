@@ -24,7 +24,12 @@ export default function MyStories() {
     return allUserStories.filter(
       (story) =>
         story.title.toLowerCase().includes(query) ||
-        story.author.toLowerCase().includes(query) ||
+        (typeof story.author === "string"
+          ? story.author
+          : story.author?.displayName || story.author?.username || ""
+        )
+          .toLowerCase()
+          .includes(query) ||
         story.category.toLowerCase().includes(query) ||
         story.genre.some((genre) => genre.toLowerCase().includes(query)) ||
         story.description.toLowerCase().includes(query)
@@ -80,7 +85,12 @@ export default function MyStories() {
                           {story.title}
                         </h3>
                         <p className="text-xs sm:text-sm text-gray-400 mb-2 sm:mb-3">
-                          {story.author} / {story.artist}
+                          {typeof story.author === "string"
+                            ? story.author
+                            : story.author?.displayName ||
+                              story.author?.username ||
+                              "Unknown"}{" "}
+                          / {story.artist}
                         </p>
                         <p className="text-xs sm:text-sm text-gray-300 line-clamp-2 sm:line-clamp-3 mb-2 sm:mb-3">
                           {story.startingText}

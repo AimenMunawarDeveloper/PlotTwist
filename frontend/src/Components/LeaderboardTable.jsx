@@ -13,7 +13,7 @@ export default function LeaderboardTable() {
       case "master":
         return <FaShieldAlt className="w-6 h-6 text-blue-400" />;
       case "gold":
-        return <FaSkull className="w-6 h-6 text-yellow-600" />;
+        return <FaShieldAlt className="w-6 h-6 text-yellow-600" />;
       default:
         return <FaShieldAlt className="w-6 h-6 text-gray-400" />;
     }
@@ -29,19 +29,19 @@ export default function LeaderboardTable() {
                 Rank
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                Player
+                Author
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                Wins
+                Stories
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                Losses
+                Branches
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                Win Rate
+                Votes
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                KDA
+                Points
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                 Rank
@@ -78,16 +78,16 @@ export default function LeaderboardTable() {
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {player.wins}
+                  {player.storiesCreated}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {player.losses}
+                  {player.branchesAccepted}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {player.winrate}%
+                  {player.totalVotes}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {player.kda}
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">
+                  {player.points}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
@@ -144,28 +144,28 @@ export default function LeaderboardTable() {
             </div>
             <div className="grid grid-cols-3 gap-2 sm:gap-4 text-center">
               <div>
-                <div className="text-xs text-gray-500">Wins</div>
+                <div className="text-xs text-gray-500">Stories</div>
                 <div className="text-xs sm:text-sm font-semibold text-gray-900">
-                  {player.wins}
+                  {player.storiesCreated}
                 </div>
               </div>
               <div>
-                <div className="text-xs text-gray-500">Losses</div>
+                <div className="text-xs text-gray-500">Branches</div>
                 <div className="text-xs sm:text-sm font-semibold text-gray-900">
-                  {player.losses}
+                  {player.branchesAccepted}
                 </div>
               </div>
               <div>
-                <div className="text-xs text-gray-500">Win Rate</div>
+                <div className="text-xs text-gray-500">Votes</div>
                 <div className="text-xs sm:text-sm font-semibold text-gray-900">
-                  {player.winrate}%
+                  {player.totalVotes}
                 </div>
               </div>
             </div>
             <div className="mt-2 sm:mt-3 text-center">
-              <div className="text-xs text-gray-500">KDA</div>
+              <div className="text-xs text-gray-500">Points</div>
               <div className="text-xs sm:text-sm font-semibold text-gray-900">
-                {player.kda}
+                {player.points}
               </div>
             </div>
           </div>

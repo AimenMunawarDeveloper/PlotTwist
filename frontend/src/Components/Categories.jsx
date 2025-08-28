@@ -4,6 +4,9 @@ import { categories } from "../data/mockData";
 export default function Categories() {
   return (
     <div className="w-full">
+      <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-white text-center">
+        Categories
+      </h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-10">
         {categories.length > 0
           ? categories.map((category, index) => {

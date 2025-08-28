@@ -6,6 +6,7 @@ import ContactUs from "../Components/ContactUs";
 import Subscription from "../Components/Subscription";
 import Footer from "../Components/Footer";
 import Trending from "../Components/Trending";
+import ContinueReading from "../Components/ContinueReading";
 
 export default function Home() {
   return (
@@ -17,16 +18,17 @@ export default function Home() {
             className="absolute top-0 right-0 z-0 pointer-events-none opacity-20 sm:opacity-30 w-1/2 sm:w-auto"
           />
         </div>
-        <div className="w-full flex flex-col gap-8 sm:gap-16 lg:gap-24">
-          <TopBar />
-          <Hero />
-          <div className="flex flex-col gap-8 sm:gap-16 lg:gap-36 items-center">
-            <HowItWorks />
-            <Trending />
-            <ContactUs />
-            <Subscription />
+                  <div className="w-full flex flex-col gap-8 sm:gap-16 lg:gap-24">
+            <TopBar />
+            <Hero />
+            <ContinueReading />
+            <div className="flex flex-col gap-8 sm:gap-16 lg:gap-36 items-center">
+              <HowItWorks />
+              <Trending />
+              <ContactUs />
+              <Subscription />
+            </div>
           </div>
-        </div>
       </div>
       <Footer />
     </div>

@@ -1,6 +1,6 @@
 import TopBar from "../Components/TopBar";
 import Footer from "../Components/Footer";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { FaSearch, FaPlus } from "react-icons/fa";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -9,15 +9,55 @@ import TopPicksForYou from "../Components/TopPicksForYou";
 import ContinueReading from "../Components/ContinueReading";
 import TrendingAndPopular from "../Components/TrendingAndPopular";
 import StartStoryModal from "../Components/StartStoryModal";
-import { allStories } from "../data/mockData";
+import { storyAPI } from "../services/api";
 
 export default function Stories() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showStartStoryModal, setShowStartStoryModal] = useState(false);
+  const [stories, setStories] = useState([]);
+  const [trendingStories, setTrendingStories] = useState([]);
+  const [popularStories, setPopularStories] = useState([]);
+  const [featuredStories, setFeaturedStories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch all data on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [
+          storiesResponse,
+          trendingResponse,
+          popularResponse,
+          featuredResponse,
+        ] = await Promise.all([
+          storyAPI.getAllStories(1, 50), // Get more stories for search
+          storyAPI.getTrendingStories(),
+          storyAPI.getPopularStories(),
+          storyAPI.getFeaturedStories(),
+        ]);
+
+        setStories(storiesResponse.data.data.stories || []);
+        setTrendingStories(trendingResponse.data.data.stories || []);
+        setPopularStories(popularResponse.data.data.stories || []);
+        setFeaturedStories(featuredResponse.data.data.stories || []);
+      } catch (err) {
+        console.error("Error fetching stories data:", err);
+        setError("Failed to load stories. Please try again later.");
+        toast.error("Failed to load stories");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const filteredStories = useMemo(() => {
-    if (!searchQuery.trim()) return allStories;
+    if (!searchQuery.trim()) return stories;
     const query = searchQuery.toLowerCase();
-    return allStories.filter(
+    return stories.filter(
       (story) =>
         story.title.toLowerCase().includes(query) ||
         story.author.toLowerCase().includes(query) ||
@@ -25,19 +65,52 @@ export default function Stories() {
         story.genre.some((genre) => genre.toLowerCase().includes(query)) ||
         story.description.toLowerCase().includes(query)
     );
-  }, [searchQuery]);
+  }, [searchQuery, stories]);
 
-  const handleStartStory = (storyData) => {
-    console.log("Starting new story:", storyData);
-    toast.success(`Story "${storyData.title}" has been started successfully!`, {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
+  const handleStartStory = async (storyData) => {
+    try {
+      const response = await storyAPI.createStory(storyData);
+      toast.success(
+        `Story "${response.data.data.story.title}" has been created successfully!`
+      );
+      setShowStartStoryModal(false);
+
+      // Refresh stories list
+      const storiesResponse = await storyAPI.getAllStories(1, 50);
+      setStories(storiesResponse.data.data.stories || []);
+    } catch (error) {
+      console.error("Error creating story:", error);
+      const errorMessage =
+        error.response?.data?.message || "Failed to create story";
+      toast.error(errorMessage);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-white mb-4">Error</h1>
+          <p className="text-gray-400 mb-4">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-white text-black px-4 py-2 rounded-lg hover:bg-gray-200"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-8 sm:gap-16 lg:gap-36">
       <div className="mx-4 sm:mx-8 md:mx-16 lg:mx-24 my-4 sm:my-8 lg:my-12">
@@ -75,7 +148,7 @@ export default function Stories() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
                   {filteredStories.map((story) => (
                     <div
-                      key={story.id}
+                      key={story._id}
                       className="bg-gray-900 rounded-lg overflow-hidden border border-gray-700 hover:border-gray-600 transition-all duration-300 hover:scale-105"
                     >
                       <div className="relative">
@@ -93,15 +166,20 @@ export default function Stories() {
                           {story.title}
                         </h3>
                         <p className="text-xs sm:text-sm text-gray-400 mb-2 sm:mb-3">
-                          {story.author} / {story.artist}
+                          {typeof story.author === "string"
+                            ? story.author
+                            : story.author?.displayName ||
+                              story.author?.username ||
+                              "Unknown"}{" "}
+                          / {story.artist}
                         </p>
                         <p className="text-xs sm:text-sm text-gray-300 line-clamp-2 sm:line-clamp-3 mb-2 sm:mb-3">
                           {story.startingText}
                         </p>
                         <div className="flex items-center justify-between text-xs text-gray-400">
-                          <span>⭐ {story.rating}</span>
-                          <span>👁️ {story.totalViews}</span>
-                          <span>❤️ {story.followers}</span>
+                          <span>⭐ {story.stats?.rating || 0}</span>
+                          <span>👁️ {story.stats?.totalViews || 0}</span>
+                          <span>❤️ {story.followers || 0}</span>
                         </div>
                       </div>
                     </div>
@@ -121,9 +199,12 @@ export default function Stories() {
               </div>
             )}
             <Categories />
-            <TopPicksForYou />
+            <TopPicksForYou stories={featuredStories} />
             <ContinueReading />
-            <TrendingAndPopular />
+            <TrendingAndPopular
+              trendingStories={trendingStories}
+              popularStories={popularStories}
+            />
           </div>
         </div>
       </div>

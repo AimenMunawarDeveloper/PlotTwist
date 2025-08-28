@@ -1,7 +1,10 @@
 import { useParams, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import TopBar from "../Components/TopBar";
 import Footer from "../Components/Footer";
-import { getStoryById } from "../data/mockData";
+import { storyAPI, chapterAPI } from "../services/api";
+import { useAuth } from "../Context/AuthContext";
+import { toast } from "react-toastify";
 import {
   FaHeart,
   FaBookmark,
@@ -14,19 +17,87 @@ import {
 
 export default function Story() {
   const { id } = useParams();
-  const story = getStoryById(id);
-  if (!story) {
-    return (
-      <div className="min-h-screen text-blackflex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Story Not Found</h1>
-          <Link to="/home" className="text-gray-300 hover:text-white underline">
-            Return to Home
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  const { user } = useAuth();
+  const [story, setStory] = useState(null);
+  const [chapters, setChapters] = useState([]);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+
+  useEffect(() => {
+    const fetchStoryData = async () => {
+      try {
+        setLoading(true);
+        const [storyResponse, chaptersResponse] = await Promise.all([
+          storyAPI.getStoryById(id),
+          chapterAPI.getChaptersByStory(id, 1, 50),
+        ]);
+
+        setStory(storyResponse.data.data.story);
+        setChapters(chaptersResponse.data.data.chapters || []);
+        setReviews(storyResponse.data.data.story.reviews || []);
+
+        // Check if user is following/bookmarked
+        if (user) {
+          setIsFollowing(
+            storyResponse.data.data.story.followers?.includes(user._id) || false
+          );
+          setIsBookmarked(
+            storyResponse.data.data.story.bookmarks?.includes(user._id) || false
+          );
+        }
+      } catch (err) {
+        console.error("Error fetching story:", err);
+        setError("Failed to load story. Please try again later.");
+        toast.error("Failed to load story");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStoryData();
+  }, [id, user]);
+
+  const handleToggleFollow = async () => {
+    if (!user) {
+      toast.error("Please login to follow stories");
+      return;
+    }
+
+    try {
+      await storyAPI.toggleFollowStory(id);
+      setIsFollowing(!isFollowing);
+      toast.success(isFollowing ? "Unfollowed story" : "Followed story");
+
+      // Update story data
+      const response = await storyAPI.getStoryById(id);
+      setStory(response.data.data.story);
+    } catch (error) {
+      console.error("Error toggling follow:", error);
+      toast.error("Failed to update follow status");
+    }
+  };
+
+  const handleToggleBookmark = async () => {
+    if (!user) {
+      toast.error("Please login to bookmark stories");
+      return;
+    }
+
+    try {
+      await storyAPI.toggleBookmarkStory(id);
+      setIsBookmarked(!isBookmarked);
+      toast.success(
+        isBookmarked ? "Removed from bookmarks" : "Added to bookmarks"
+      );
+    } catch (error) {
+      console.error("Error toggling bookmark:", error);
+      toast.error("Failed to update bookmark status");
+    }
+  };
+
   const renderStars = (rating) => {
     return [...Array(5)].map((_, i) => (
       <span key={i} className={i < rating ? "text-white" : "text-gray-600"}>
@@ -34,6 +105,31 @@ export default function Story() {
       </span>
     ));
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+      </div>
+    );
+  }
+
+  if (error || !story) {
+    return (
+      <div className="min-h-screen text-black flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Story Not Found</h1>
+          <p className="text-gray-400 mb-4">
+            {error || "The story you're looking for doesn't exist."}
+          </p>
+          <Link to="/home" className="text-gray-300 hover:text-white underline">
+            Return to Home
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen text-black">
       <div className="mx-4 sm:mx-8 md:mx-16 lg:mx-24 my-4 sm:my-8 lg:my-12">
@@ -63,35 +159,56 @@ export default function Story() {
                     : ""}
                 </p>
                 <p className="text-gray-500 text-sm sm:text-base">
-                  {story.author} / {story.artist}
+                  {typeof story.author === "string"
+                    ? story.author
+                    : story.author?.displayName ||
+                      story.author?.username ||
+                      "Unknown"}{" "}
+                  / {story.artist}
                 </p>
               </div>
               <div className="flex flex-wrap gap-4 lg:gap-6 text-sm">
-                <div className="flex items-center gap-2">
-                  <FaHeart className="text-gray-500" />
-                  <span className="text-gray-500">{story.followers}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <FaBookmark className="text-gray-500" />
-                  <span className="text-gray-500">38</span>
-                </div>
+                <button
+                  onClick={handleToggleFollow}
+                  className={`flex items-center gap-2 transition-colors ${
+                    isFollowing
+                      ? "text-red-500"
+                      : "text-gray-500 hover:text-red-400"
+                  }`}
+                >
+                  <FaHeart className={isFollowing ? "text-red-500" : ""} />
+                  <span>{story.followers?.length || 0}</span>
+                </button>
+                <button
+                  onClick={handleToggleBookmark}
+                  className={`flex items-center gap-2 transition-colors ${
+                    isBookmarked
+                      ? "text-blue-500"
+                      : "text-gray-500 hover:text-blue-400"
+                  }`}
+                >
+                  <FaBookmark className={isBookmarked ? "text-blue-500" : ""} />
+                  <span>{story.bookmarks?.length || 0}</span>
+                </button>
                 <div className="flex items-center gap-2">
                   <FaComment className="text-gray-500" />
-                  <span className="text-gray-500">430</span>
+                  <span className="text-gray-500">{reviews.length}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <FaEye className="text-gray-500" />
-                  <span className="text-gray-500">{story.totalViews}</span>
+                  <span className="text-gray-500">
+                    {story.stats?.totalViews || 0}
+                  </span>
                 </div>
               </div>
               <div>
                 <p className="text-sm text-gray-500">
-                  {story.genre.join(", ")}
+                  {story.genre?.join(", ")}
                 </p>
               </div>
               <div className="text-sm text-gray-500">
                 <p>
-                  Original Publication: {story.status.toUpperCase()} /{" "}
+                  Original Publication: {story.status?.toUpperCase()} /{" "}
                   {story.publicationYear}-?
                 </p>
                 <p>Read Direction: Top to Bottom ↓</p>
@@ -99,36 +216,38 @@ export default function Story() {
               <div className="bg-gray-900 p-4 sm:p-6 rounded-lg border border-gray-700">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-4">
                   <div className="text-2xl sm:text-3xl font-bold text-white">
-                    {story.rating}
+                    {story.stats?.rating || 0}
                   </div>
                   <div className="flex text-lg sm:text-2xl">
-                    {renderStars(Math.floor(story.rating))}
+                    {renderStars(Math.floor(story.stats?.rating || 0))}
                   </div>
                   <div className="text-sm text-gray-300">
-                    {story.totalRatings} votes
+                    {story.stats?.totalRatings || 0} votes
                   </div>
                 </div>
-                <div className="space-y-2">
-                  {Object.entries(story.ratingDistribution)
-                    .reverse()
-                    .map(([stars, percentage]) => (
-                      <div key={stars} className="flex items-center gap-2">
-                        <span className="w-8 text-gray-300 flex items-center gap-1">
-                          {stars}
-                          <FaStar />
-                        </span>
-                        <div className="flex-1 bg-gray-700 rounded-full h-2">
-                          <div
-                            className="bg-white h-2 rounded-full"
-                            style={{ width: `${percentage}%` }}
-                          ></div>
+                {story.ratingDistribution && (
+                  <div className="space-y-2">
+                    {Object.entries(story.ratingDistribution)
+                      .reverse()
+                      .map(([stars, percentage]) => (
+                        <div key={stars} className="flex items-center gap-2">
+                          <span className="w-8 text-gray-300 flex items-center gap-1">
+                            {stars}
+                            <FaStar />
+                          </span>
+                          <div className="flex-1 bg-gray-700 rounded-full h-2">
+                            <div
+                              className="bg-white h-2 rounded-full"
+                              style={{ width: `${percentage}%` }}
+                            ></div>
+                          </div>
+                          <span className="w-12 text-sm text-gray-300">
+                            {percentage}%
+                          </span>
                         </div>
-                        <span className="w-12 text-sm text-gray-300">
-                          {percentage}%
-                        </span>
-                      </div>
-                    ))}
-                </div>
+                      ))}
+                  </div>
+                )}
                 <div className="flex gap-4 mt-4 pt-4 border-t border-gray-700">
                   {["😍", "😂", "😱", "😡", "😢"].map((emoji, index) => (
                     <div key={index} className="flex flex-col items-center">
@@ -178,7 +297,7 @@ export default function Story() {
                       href="#"
                       className="text-gray-300 hover:text-white underline"
                     >
-                      https://plottwist.com/story/{story.id}
+                      https://plottwist.com/story/{story._id}
                     </a>
                   </p>
                 </div>
@@ -188,7 +307,7 @@ export default function Story() {
           <div>
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-black">
-                Chapters ({story.chapters.length})
+                Chapters ({chapters.length})
               </h2>
               <div className="flex gap-2">
                 <button className="p-2 hover:bg-gray-800 rounded text-gray-300 hover:text-white">
@@ -197,10 +316,10 @@ export default function Story() {
               </div>
             </div>
             <div className="space-y-2">
-              {story.chapters.map((chapter) => (
+              {chapters.map((chapter) => (
                 <Link
-                  key={chapter.id}
-                  to={`/story/${story.id}/chapter/${chapter.id}`}
+                  key={chapter._id}
+                  to={`/story/${story._id}/chapter/${chapter._id}`}
                   className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-gray-900 rounded-lg hover:bg-gray-800 border border-gray-700 transition-colors gap-3 sm:gap-4"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 min-w-0 flex-1">
@@ -209,26 +328,37 @@ export default function Story() {
                     </span>
                     <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-400">
                       <span className="whitespace-nowrap">
-                        👥 Baddies' Asylum
+                        👥{" "}
+                        {typeof story.author === "string"
+                          ? story.author
+                          : story.author?.displayName ||
+                            story.author?.username ||
+                            "Unknown"}
                       </span>
-                      <span className="whitespace-nowrap">👤 [DELETED]</span>
                       <span className="flex items-center gap-1 whitespace-nowrap">
                         <FaComment className="text-gray-400" />
-                        {chapter.comments}
+                        {chapter.stats?.comments || 0}
                       </span>
                       <span className="flex items-center gap-1 whitespace-nowrap">
                         <FaEye className="text-gray-400" />
-                        {chapter.views}
+                        {chapter.stats?.views || 0}
                       </span>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
                     <span className="text-xs sm:text-sm text-gray-400 whitespace-nowrap">
-                      {chapter.date}
+                      {new Date(chapter.createdAt).toLocaleDateString()}
                     </span>
-                    <button className="p-2 hover:bg-gray-700 rounded text-gray-400 hover:text-white">
-                      <FaTrash />
-                    </button>
+                    {user &&
+                      (user._id ===
+                        (typeof story.author === "string"
+                          ? story.author
+                          : story.author?._id) ||
+                        user.role === "admin") && (
+                        <button className="p-2 hover:bg-gray-700 rounded text-gray-400 hover:text-white">
+                          <FaTrash />
+                        </button>
+                      )}
                   </div>
                 </Link>
               ))}
@@ -237,7 +367,7 @@ export default function Story() {
           <div>
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-black">
-                Reviews ({story.reviews.length})
+                Reviews ({reviews.length})
               </h2>
               <button className="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded-lg font-medium text-white transition-colors">
                 Write My Review
@@ -255,26 +385,40 @@ export default function Story() {
               </button>
             </div>
             <div className="space-y-6">
-              {story.reviews.map((review) => (
+              {reviews.map((review) => (
                 <div
-                  key={review.id}
+                  key={review._id}
                   className="bg-gray-900 p-4 sm:p-6 rounded-lg border border-gray-700"
                 >
                   <div className="flex items-start gap-3 sm:gap-4">
                     <div className="text-2xl sm:text-3xl flex-shrink-0">
-                      {review.avatar}
+                      {typeof review.user?.avatar === "string" &&
+                      review.user.avatar ? (
+                        <img
+                          src={review.user.avatar}
+                          alt={
+                            review.user?.displayName ||
+                            review.user?.username ||
+                            "User"
+                          }
+                          className="w-8 h-8 sm:w-12 sm:h-12 rounded-full object-cover"
+                        />
+                      ) : (
+                        "👤"
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-wrap items-center gap-2 mb-2">
                         <span className="text-gray-300 font-medium truncate">
-                          {review.user}
+                          {review.user?.displayName ||
+                            review.user?.username ||
+                            "Anonymous"}
                         </span>
-                        <span className="text-gray-400 flex-shrink-0">♀</span>
                         <div className="flex text-white flex-shrink-0">
                           {renderStars(review.rating)}
                         </div>
                         <span className="text-gray-400 text-xs sm:text-sm flex-shrink-0">
-                          {review.status}
+                          {new Date(review.createdAt).toLocaleDateString()}
                         </span>
                       </div>
                       <p className="text-gray-300 mb-4 text-sm sm:text-base break-words">
@@ -283,7 +427,7 @@ export default function Story() {
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0">
                         <div className="flex items-center gap-2 sm:gap-4">
                           <span className="text-xs sm:text-sm text-gray-300">
-                            {review.upvotes}
+                            {review.upvotes || 0}
                           </span>
                           <button className="p-1 hover:bg-gray-700 rounded text-gray-400 hover:text-white">
                             ↑
@@ -293,9 +437,6 @@ export default function Story() {
                           </button>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-xs sm:text-sm text-gray-400">
-                            {review.date}
-                          </span>
                           <button className="p-1 hover:bg-gray-700 rounded text-gray-400 hover:text-white">
                             <FaEllipsisH />
                           </button>
